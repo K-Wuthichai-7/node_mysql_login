@@ -12,13 +12,15 @@ const db = mysql.createConnection({
 
 
 exports.register = (req, res) => {
-    console.log(req.body)
+
 
     const { name, email, password, passwordConfirm } = req.body;
 
     db.query('SELECT email FROM user WHERE email = ?', [email], async (error, result) => {
+
         if (error) {
             console.log(error)
+            console.log(result)
         }
 
         if (result.length > 0) {
@@ -30,22 +32,22 @@ exports.register = (req, res) => {
                 message: "รหัสผ่านไม่ตรงกัน"
             });
         }
+        //hash password เพื่อความปลอดภัย
+        // let hashedPassword = await bcrypt.hash(password, 8);
 
-        let hashedPassword = await bcrypt.hash(password, 8);
-        console.log(hashedPassword)
-        db.query('INSERT INTO user SET ?', { name: name, email: email, password: hashedPassword },(error,result)=>{
-                if(error){
-                    console.log(error)
-                }else{
-                    console.log(result)
-                    return res.render("register", {
-                        message: "ลงทะเบียนสำเร็จ"
-                    })
-                }
+        db.query('INSERT INTO user SET ?', { name: name, email: email, password: password }, (error, result) => {
+            if (error) {
+                console.log(error)
+            } else {
+
+                return res.render("register", {
+                    message: "ลงทะเบียนสำเร็จ"
+                })
+            }
         })
     });
 
 
 
-   
+
 }

@@ -37,6 +37,7 @@ db.connect((error) => {
 //define router
 app.use('/', require("./router/pages"));
 app.use('/auth', require('./router/auth'))
+app.use('/login', require('./router/pages'))
 
 app.listen(port, () => {
     console.log("start server on port", + port);
